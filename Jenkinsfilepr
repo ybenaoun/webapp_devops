@@ -35,7 +35,7 @@ pipeline {
 
         stage('Smoke Test') {
             steps {
-                bat 'timeout /t 3 >nul'
+                bat 'timeout /t 3'
                 bat 'curl -f http://localhost:8080'
             }
         }
