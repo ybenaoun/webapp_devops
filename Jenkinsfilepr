@@ -29,7 +29,7 @@ pipeline {
         stage('Run Docker') {
             steps {
                 bat 'docker build -t webapp-pr .'
-                bat 'docker run -d --name webapp-pr -p 8080:80 webapp-pr'
+                bat 'docker run -d --name webapp-pr -p 8082:80 webapp-pr'
             }
         }
 
