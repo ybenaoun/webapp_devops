@@ -15,8 +15,16 @@ pipeline {
         }
 
         stage('Setup') {
-            steps { bat 'echo Preparing release build' }
+            steps {
+                bat """
+                  echo === Preparing Release Build ===
+                  docker --version
+                  echo Docker is available.
+                  echo Environment ready.
+                """
+            }
         }
+
 
         stage('Build') {
             steps { bat 'echo Building release version' }
