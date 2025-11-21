@@ -1,5 +1,10 @@
 pipeline {
     agent any
+    environment{
+        IMAGE="ybenaoun/webapp"
+        TAG="build-${env.BUILD_NUMBER}"
+
+    }
 
     options {
         skipDefaultCheckout()
@@ -31,9 +36,8 @@ pipeline {
 
         stage('Smoke Test') {
             steps {
-                bat "docker run -d --name webapp-release -p 8082:80 webapp:${TAG_NAME}"
-                bat "timeout /t 3 >nul"
-                bat "curl -f http://localhost:8082"
+                bat "docker run -d --name webapp-release -p 8084:80 webapp:${TAG_NAME}"
+                bat "curl -f http://localhost:8084"
             }
         }
 
