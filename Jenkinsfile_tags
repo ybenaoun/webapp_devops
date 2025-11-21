@@ -1,0 +1,54 @@
+pipeline {
+    agent any
+
+    options {
+        skipDefaultCheckout()
+    }
+
+    stages {
+
+        stage('Checkout') {
+            steps {
+                checkout([$class: 'GitSCM',
+                          branches: [[name: "refs/tags/${TAG_NAME}"]],
+                          userRemoteConfigs: scm.userRemoteConfigs])
+            }
+        }
+
+        stage('Setup') {
+            steps { bat 'echo Preparing release build' }
+        }
+
+        stage('Build') {
+            steps { bat 'echo Building release version' }
+        }
+
+        stage('Run Docker') {
+            steps {
+                bat "docker build -t webapp:${TAG_NAME} ."
+            }
+        }
+
+        stage('Smoke Test') {
+            steps {
+                bat "docker run -d --name webapp-release -p 8082:80 webapp:${TAG_NAME}"
+                bat "timeout /t 3 >nul"
+                bat "curl -f http://localhost:8082"
+            }
+        }
+
+        stage('Archive Artifacts') {
+            steps {
+                archiveArtifacts artifacts: 'build-log.txt'
+                bat "docker save webapp:${TAG_NAME} -o webapp-${TAG_NAME}.tar"
+                archiveArtifacts artifacts: "webapp-${TAG_NAME}.tar"
+            }
+        }
+    }
+
+    post {
+        always {
+            bat 'docker rm -f webapp-release || exit 0'
+        }
+    }
+}

@@ -1,0 +1,54 @@
+pipeline {
+    agent any
+
+    triggers {
+        githubPullRequest()
+    }
+
+    stages {
+
+        stage('Checkout') {
+            steps {
+                checkout scm
+            }
+        }
+
+        stage('Setup') {
+            steps {
+                bat 'echo No dependencies needed for static web project'
+            }
+        }
+
+        stage('Build') {
+            steps {
+                bat 'echo Build simulated for HTML/CSS/JS'
+            }
+        }
+
+        stage('Run Docker') {
+            steps {
+                bat 'docker build -t webapp-pr .'
+                bat 'docker run -d --name webapp-pr -p 8080:80 webapp-pr'
+            }
+        }
+
+        stage('Smoke Test') {
+            steps {
+                bat 'timeout /t 3 >nul'
+                bat 'curl -f http://localhost:8080'
+            }
+        }
+
+        stage('Archive') {
+            steps {
+                archiveArtifacts artifacts: 'Dockerfile'
+            }
+        }
+    }
+
+    post {
+        always {
+            bat 'docker rm -f webapp-pr || exit 0'
+        }
+    }
+}
