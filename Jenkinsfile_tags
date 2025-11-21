@@ -1,7 +1,7 @@
 pipeline {
     agent any
     environment{
-        IMAGE="ybenaoun/webapp"
+        IMAGE="ybenaoun/webapp-release"
         TAG="build-${env.BUILD_NUMBER}"
 
     }
