@@ -35,8 +35,13 @@ pipeline {
 
         stage('Smoke Test') {
             steps {
-                bat 'timeout /t 3'
-                bat 'curl -f http://localhost:8080'
+                bat """
+                docker rm -f webapp_test 2>nul || ver > nul
+                docker run -d --name webapp_test -p 8081:80 %IMAGE%:%TAG%
+                ping -n 3 127.0.0.1 > nul
+                curl -I http://localhost:8082 | find "200 OK"
+                docker rm -f webapp_test
+                """
             }
         }
 
