@@ -6,17 +6,11 @@ pipeline {
 
     }
 
-    options {
-        skipDefaultCheckout()
-    }
-
     stages {
 
         stage('Checkout') {
             steps {
-                checkout([$class: 'GitSCM',
-                          branches: [[name: "refs/tags/${TAG_NAME}"]],
-                          userRemoteConfigs: scm.userRemoteConfigs])
+                checkout scm
             }
         }
 
