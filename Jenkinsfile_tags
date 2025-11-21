@@ -38,7 +38,7 @@ pipeline {
 
         stage('Smoke Test') {
             steps {
-                bat "docker run -d --name webapp-release -p 8084:80 webapp:${TAG_NAME}"
+                bat "docker run -d --name webapp-release -p 8084:80 webapp-release"
                 bat "curl -f http://localhost:8084"
             }
         }
@@ -46,8 +46,8 @@ pipeline {
         stage('Archive Artifacts') {
             steps {
                 archiveArtifacts artifacts: 'build-log.txt'
-                bat "docker save webapp:${TAG_NAME} -o webapp-${TAG_NAME}.tar"
-                archiveArtifacts artifacts: "webapp-${TAG_NAME}.tar"
+                bat "docker save webapp-release -o webapp-release.tar"
+                archiveArtifacts artifacts: "webapp-release.tar"
             }
         }
     }
