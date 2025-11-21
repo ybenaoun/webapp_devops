@@ -5,6 +5,10 @@ pipeline {
         TAG="build-${env.BUILD_NUMBER}"
 
     }
+    triggers{
+        pollSCM("")
+
+    }
 
     stages {
 
