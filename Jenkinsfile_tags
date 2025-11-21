@@ -45,7 +45,7 @@ pipeline {
 
         stage('Archive Artifacts') {
             steps {
-                archiveArtifacts artifacts: 'build-log.txt'
+                //archiveArtifacts artifacts: 'build-log.txt'
                 bat "docker save webapp-release -o webapp-release.tar"
                 archiveArtifacts artifacts: "webapp-release.tar"
             }
