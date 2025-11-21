@@ -1,8 +1,9 @@
 pipeline {
     agent any
 
-    triggers {
-        githubPullRequest()
+    environment {
+        IMAGE="ybenaoun/webapp"
+        TAG= "build-${env.BUILD_NUMBER}"
     }
 
     stages {
